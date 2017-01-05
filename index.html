@@ -73,9 +73,10 @@
                 particle.beginFill(0xCCCCCC);
                 particle.drawRect(0, 0, size, size);
                 particle.endFill();
-                particle.x = sprite.x - (size/2) * scale;
-                particle.y = sprite.y - (size/2) * scale;
+                particle.x = sprite.x;
+                particle.y = sprite.y;
                 particle.scale.set(2);
+                particle.pivot.set(size/2);
                 particles.push(particle);
                 stage.addChild(particle);
             }
