@@ -41,6 +41,7 @@
             sprite.position.set(window.innerWidth/2, window.innerHeight/2);
             sprite.vx = 0;
             sprite.vy = 0;
+            sprite.speed = 1;
             stage.addChild(sprite);
 
             // capture keyboard input
@@ -63,22 +64,20 @@
         }
 
         function play() {
-            var speed = 1;
-
             // update horizontal velocity
             if(left.isDown && !right.isDown) {
-                sprite.vx = -speed;
+                sprite.vx = -sprite.speed;
             } else if(right.isDown && !left.isDown) {
-                sprite.vx = speed;
+                sprite.vx = sprite.speed;
             } else {
                 sprite.vx = 0;
             }
             
             // update vertical velocity
             if(up.isDown && !down.isDown) {
-                sprite.vy = -speed;
+                sprite.vy = -sprite.speed;
             } else if(down.isDown && !up.isDown) {
-                sprite.vy = speed;
+                sprite.vy = sprite.speed;
             } else {
                 sprite.vy = 0;
             }
