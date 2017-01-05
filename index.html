@@ -38,6 +38,7 @@
             // setup ship sprite
             sprite = new PIXI.Sprite(PIXI.loader.resources["ship.png"].texture);
             sprite.anchor.set(0.5, 0.5);
+            sprite.position.set(window.innerWidth/2, window.innerHeight/2);
             sprite.vx = 0;
             sprite.vy = 0;
             stage.addChild(sprite);
