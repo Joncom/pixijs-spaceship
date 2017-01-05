@@ -14,7 +14,7 @@
         var stage = new PIXI.Container();
         var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, { antialias: false });
         document.body.appendChild(renderer.view);
-        var sprite, state, left, up, right, down, particles, scale;
+        var sprite, state, particles, scale, mouse;
 
         PIXI.loader
             .add("ship.png")
@@ -35,11 +35,9 @@
             sprite.zIndex = 1;
             stage.addChild(sprite);
 
-            // capture keyboard input
-            left = keyboard(37);
-            up = keyboard(38);
-            right = keyboard(39);
-            down = keyboard(40);
+            // capture mouse input
+            renderer.view.addEventListener('mousemove', mousemove, false );
+            mouse = { x: 0, y: 0 };
 
             particles = [];
 
@@ -89,23 +87,10 @@
                 return a.zIndex - b.zIndex;
             });
 
-            // update horizontal velocity
-            if(left.isDown && !right.isDown) {
-                sprite.vx = -sprite.speed;
-            } else if(right.isDown && !left.isDown) {
-                sprite.vx = sprite.speed;
-            } else {
-                sprite.vx = 0;
-            }
-            
-            // update vertical velocity
-            if(up.isDown && !down.isDown) {
-                sprite.vy = -sprite.speed;
-            } else if(down.isDown && !up.isDown) {
-                sprite.vy = sprite.speed;
-            } else {
-                sprite.vy = 0;
-            }
+            // set ship velocity toward mouse
+            var angle = Math.atan2(mouse.y - sprite.y, mouse.x - sprite.x);
+            sprite.vx = Math.cos(angle) * sprite.speed;
+            sprite.vy = Math.sin(angle) * sprite.speed;
 
             // rotate ship to face moving direction
             sprite.rotation = Math.atan2(sprite.vy, sprite.vx);
@@ -114,35 +99,11 @@
             sprite.y += sprite.vy;
         }
 
-        function keyboard(keyCode) {
-            var key = {};
-            key.code = keyCode;
-            key.isDown = false;
-            key.isUp = true;
-            key.press = undefined;
-            key.release = undefined;
-
-            key.downHandler = function (event) {
-                if (event.keyCode === key.code) {
-                    if (key.isUp && key.press) key.press();
-                    key.isDown = true;
-                    key.isUp = false;
-                }
-                event.preventDefault();
-            };
-
-            key.upHandler = function (event) {
-                if (event.keyCode === key.code) {
-                    if (key.isDown && key.release) key.release();
-                    key.isDown = false;
-                    key.isUp = true;
-                }
-                event.preventDefault();
-            };
-
-            window.addEventListener("keydown", key.downHandler.bind(key), false);
-            window.addEventListener("keyup", key.upHandler.bind(key), false);
-            return key;
+        function mousemove(ev) {
+            mouse = {
+                x: ev.clientX,
+                y: ev.clientY
+            }
         }
 
     </script>
