@@ -31,31 +31,31 @@
 
         // setup game
         function setup() {
+            // create ship
             ship = new Ship(renderer.view.width/2, renderer.view.height/2);
+            particles = [];            
 
-            // capture mouse input
-            renderer.view.addEventListener('mousemove', mousemove, false );
-            renderer.view.addEventListener('touchstart', mousemove, false);
-            renderer.view.addEventListener('touchmove', mousemove, false);
-            mouse = { x: 0, y: 0 };
-
-            particles = [];
+            // create stars
             stars = [];
-            meteors = [];
-
-            // generate stars
             for(var i=0; i<225; i++) {
                 var x = Math.floor(Math.random() * renderer.view.width);
                 var y = Math.floor(Math.random() * renderer.view.height);
                 stars.push(new Star(x, y));
             }
 
-            // generate meteors
+            // create meteors
+            meteors = [];
             for(var i=0; i<4; i++) {
                 var x = Math.floor(Math.random() * renderer.view.width);
                 var y = Math.floor(Math.random() * renderer.view.height);
                 meteors.push(new Meteor(x, y));
             }
+
+            // capture mouse input
+            renderer.view.addEventListener('mousemove', mousemove, false );
+            renderer.view.addEventListener('touchstart', mousemove, false);
+            renderer.view.addEventListener('touchmove', mousemove, false);
+            mouse = { x: 0, y: 0 };
 
             // start game
             state = play;
@@ -74,6 +74,11 @@
                 stars[i].update();
             }
 
+            // update meteors
+            for(var i=0; i<meteors.length; i++) {
+                meteors[i].update();
+            }
+
             // update particles
             for(var i=particles.length-1; i>=0; i--) {
                 particles[i].rotation += 0.1;
@@ -87,11 +92,6 @@
 
             // update ship
             ship.update();
-
-            // update meteors
-            for(var i=0; i<meteors.length; i++) {
-                meteors[i].update();
-            }
 
             // sort draw order by zIndex
             stage.children.sort(function(a,b) {
