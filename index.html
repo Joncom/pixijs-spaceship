@@ -72,8 +72,8 @@
                 particle.beginFill(0xCCCCCC);
                 particle.drawRect(0, 0, size, size);
                 particle.endFill();
-                particle.x = sprite.x;
-                particle.y = sprite.y;
+                particle.x = sprite.x + Math.random() * 4;
+                particle.y = sprite.y + Math.random() * 4;
                 particle.scale.set(2);
                 particle.pivot.set(size/2);
                 particles.push(particle);
