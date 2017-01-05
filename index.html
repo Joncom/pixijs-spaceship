@@ -80,14 +80,8 @@
             }
 
             // update particles
-            for(var i=particles.length-1; i>=0; i--) {
-                particles[i].rotation += 0.1;
-                particles[i].scale.x -= 0.005;
-                particles[i].scale.y -= 0.005;
-                if(particles[i].scale.x <= 0 || particles[i].scale.y <= 0) {
-                    stage.removeChild(particles[i]);
-                    particles.splice(i, 1);
-                }
+            for(var i=0; i<particles.length; i++) {
+                particles[i].update();
             }
 
             // update ship
@@ -141,17 +135,33 @@
             }
 
             // create exhaust particle
+            var x = this.sprite.x - 2 + Math.random() * 4;
+            var y = this.sprite.y - 2 + Math.random() * 4;
+            new ExhaustParticle(x, y);
+        }
+
+        function ExhaustParticle(x, y) {
             var size = 16;
-            var particle = new PIXI.Graphics();
-            particle.beginFill(0xCCCCCC);
-            particle.drawRect(0, 0, size, size);
-            particle.endFill();
-            particle.x = this.sprite.x - 2 + Math.random() * 4;
-            particle.y = this.sprite.y - 2 + Math.random() * 4;
-            particle.pivot.set(size/2);
-            particle.zIndex = 0;
-            particles.push(particle);
-            stage.addChild(particle);
+            this.graphic = new PIXI.Graphics();
+            this.graphic.beginFill(0xCCCCCC);
+            this.graphic.drawRect(0, 0, size, size);
+            this.graphic.endFill();
+            this.graphic.x = x;
+            this.graphic.y = y;
+            this.graphic.pivot.set(size/2);
+            this.graphic.zIndex = 0;
+            stage.addChild(this.graphic);
+            particles.push(this);
+        }
+
+        ExhaustParticle.prototype.update = function() {
+            this.graphic.rotation += 0.1;
+            this.graphic.scale.x -= 0.005;
+            this.graphic.scale.y -= 0.005;
+            if(this.graphic.scale.x <= 0 || this.graphic.scale.y <= 0) {
+                stage.removeChild(this.graphic);
+                particles.splice(particles.indexOf(this), 1);
+            }
         }
 
         function Star(x, y) {
