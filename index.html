@@ -24,6 +24,7 @@
         // load assets
         PIXI.loader
             .add("ship.png")
+            .add("meteor.png")
             .load(setup);
 
         var scale, sprite, state, particles, mouse;
@@ -37,7 +38,7 @@
             sprite.vx = 0;
             sprite.vy = 0;
             sprite.speed = 4;
-            sprite.zIndex = 1;
+            sprite.zIndex = 2;
             stage.addChild(sprite);
 
             // capture mouse input
@@ -48,12 +49,20 @@
 
             particles = [];
             stars = [];
+            meteors = [];
 
             // generate stars
             for(var i=0; i<225; i++) {
                 var x = Math.floor(Math.random() * renderer.view.width);
                 var y = Math.floor(Math.random() * renderer.view.height);
                 stars.push(new Star(x, y));
+            }
+
+            // generate meteors
+            for(var i=0; i<4; i++) {
+                var x = Math.floor(Math.random() * renderer.view.width);
+                var y = Math.floor(Math.random() * renderer.view.height);
+                meteors.push(new Meteor(x, y));
             }
 
             // start game
@@ -122,6 +131,11 @@
             // update sprite position
             sprite.x += sprite.vx;
             sprite.y += sprite.vy;
+
+            // update meteors
+            for(var i=0; i<meteors.length; i++) {
+                meteors[i].update();
+            }
         }
 
         function mousemove(ev) {
@@ -155,6 +169,24 @@
         }
 
         Star.MAX_SIZE = 4;
+
+        function Meteor(x, y) {
+            this.rotateSpeed = Math.random() * 0.02;
+
+            this.sprite = new PIXI.Sprite(PIXI.loader.resources["meteor.png"].texture);
+            this.sprite.anchor.set(0.5, 0.5);
+            this.sprite.position.set(x, y);
+            this.sprite.vx = Math.random() * 2;
+            this.sprite.vy = Math.random() * 2;
+            this.sprite.zIndex = 1;
+            stage.addChild(this.sprite);
+        }
+
+        Meteor.prototype.update = function() {
+            this.sprite.x += this.sprite.vx;
+            this.sprite.y += this.sprite.vy;
+            this.sprite.rotation += this.rotateSpeed;            
+        }
 
     </script>
 </body>
