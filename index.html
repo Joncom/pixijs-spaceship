@@ -36,6 +36,14 @@
 
         //Tell the `renderer` to `render` the `stage`
         renderer.render(stage);
+
+        PIXI.loader
+            .add("ship.png")
+            .load(setup);
+
+        function setup() {
+            var sprite = new PIXI.Sprite(PIXI.loader.resources["ship.png"].texture);
+        }
     </script>
 </body>
 </html>
