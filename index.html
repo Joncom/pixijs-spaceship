@@ -15,16 +15,18 @@
         var stage = new PIXI.Container();
         var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, { antialias: false });
         document.body.appendChild(renderer.view);
-        var sprite, state, left, up, right, down, particles;
+        var sprite, state, left, up, right, down, particles, scale;
 
         PIXI.loader
             .add("ship.png")
             .load(setup);
 
         function setup() {
+            scale = 2;
+
             // setup ship sprite
             sprite = new PIXI.Sprite(PIXI.loader.resources["ship.png"].texture);
-            sprite.scale.set(2);
+            sprite.scale.set(scale);
             sprite.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
             sprite.anchor.set(0.5, 0.5);
             sprite.position.set(window.innerWidth/2, window.innerHeight/2);
@@ -73,8 +75,9 @@
                 particle.beginFill(0xCCCCCC);
                 particle.drawRect(0, 0, size, size);
                 particle.endFill();
-                particle.x = sprite.x - size/2;
-                particle.y = sprite.y - size/2;
+                particle.x = sprite.x - (size/2) * scale;
+                particle.y = sprite.y - (size/2) * scale;
+                particle.scale.set(2);
                 particles.push(particle);
                 stage.addChild(particle);
             }
