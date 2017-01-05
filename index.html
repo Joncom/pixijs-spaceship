@@ -79,12 +79,13 @@
 
             // generate particles
             for( var i=0; i<1; i++) {
+                var size = 8;
                 var particle = new PIXI.Graphics();
                 particle.beginFill(0xCCCCCC);
-                particle.drawRect(0, 0, 8, 8);
+                particle.drawRect(0, 0, size, size);
                 particle.endFill();
-                particle.x = sprite.x;
-                particle.y = sprite.y;
+                particle.x = sprite.x - size/2;
+                particle.y = sprite.y - size/2;
                 particles.push(particle);
                 stage.addChild(particle);
             }
