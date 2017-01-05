@@ -71,7 +71,7 @@
         function play() {
             // update stars
             for(var i=0; i<stars.length; i++) {
-                stars[i].updateAlpha();
+                stars[i].update();
             }
 
             // update particles
@@ -172,7 +172,8 @@
             stage.addChild(this.graphic);
         }
 
-        Star.prototype.updateAlpha = function() {
+        Star.prototype.update = function() {
+            // fade in and out over time
             var time = Date.now() / 1000 + this.timeOffset;
             this.graphic.alpha = 0.4 + 0.6 * Math.abs(Math.cos(time * this.fadeSpeed));
         }
