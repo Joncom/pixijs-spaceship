@@ -29,6 +29,7 @@
         var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.view);
         var sprite;
+        var state = play;
 
         PIXI.loader
             .add("ship.png")
@@ -48,15 +49,15 @@
 
         function gameLoop() {
             requestAnimationFrame(gameLoop);
+            state();
+            renderer.render(stage);
+        }
 
+        function play() {
             sprite.vx = 1;
             sprite.vy = 1;
-            
             sprite.x += sprite.vx;
             sprite.y += sprite.vy;
-
-            // render the frame
-            renderer.render(stage);
         }
 
         
