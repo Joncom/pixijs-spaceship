@@ -28,14 +28,18 @@
         var stage = new PIXI.Container();
         var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.view);
-        renderer.render(stage);
 
         PIXI.loader
             .add("ship.png")
             .load(setup);
 
         function setup() {
+            // setup ship sprite
             var sprite = new PIXI.Sprite(PIXI.loader.resources["ship.png"].texture);
+            stage.addChild(sprite);
+            
+            // render the game
+            renderer.render(stage);
         }
     </script>
 </body>
