@@ -15,6 +15,12 @@
         var stage = new PIXI.Container();
         var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, { antialias: false });
         document.body.appendChild(renderer.view);
+        
+        // always fit canvas to window
+        window.onresize = function() {
+            renderer.resize(window.innerWidth, window.innerHeight);
+        }
+
         var sprite, state, particles, scale, mouse;
 
         PIXI.loader
