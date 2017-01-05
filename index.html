@@ -32,6 +32,7 @@
             sprite.vx = 0;
             sprite.vy = 0;
             sprite.speed = 1;
+            sprite.zIndex = 1;
             stage.addChild(sprite);
 
             // capture keyboard input
@@ -76,9 +77,17 @@
                 particle.y = sprite.y + Math.random() * 4;
                 particle.scale.set(2);
                 particle.pivot.set(size/2);
+                particle.zIndex = 0;
                 particles.push(particle);
                 stage.addChild(particle);
             }
+
+            // sort draw order by zIndex
+            stage.children.sort(function(a,b) {
+                a.zIndex = a.zIndex || 0;
+                b.zIndex = b.zIndex || 0;
+                return a.zIndex - b.zIndex;
+            });
 
             // update horizontal velocity
             if(left.isDown && !right.isDown) {
