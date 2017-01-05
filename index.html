@@ -21,13 +21,20 @@
             renderer.resize(window.innerWidth, window.innerHeight);
         }
 
+        // capture mouse input
+        var mouse = { x: 0, y: 0 };
+        var mousemove = function(ev) { mouse = { x: ev.clientX, y: ev.clientY }; };
+        renderer.view.addEventListener('mousemove', mousemove, false);
+        renderer.view.addEventListener('touchstart', mousemove, false);
+        renderer.view.addEventListener('touchmove', mousemove, false);      
+
         // load assets
         PIXI.loader
             .add("ship.png")
             .add("meteor.png")
             .load(setup);
 
-        var ship, particles, meteors, mouse, state;
+        var ship, particles, meteors, state;
 
         // setup game
         function setup() {
@@ -49,26 +56,15 @@
                 var x = Math.floor(Math.random() * renderer.view.width);
                 var y = Math.floor(Math.random() * renderer.view.height);
                 meteors.push(new Meteor(x, y));
-            }
-
-            // capture mouse input
-            renderer.view.addEventListener('mousemove', mousemove, false);
-            renderer.view.addEventListener('touchstart', mousemove, false);
-            renderer.view.addEventListener('touchmove', mousemove, false);
-            mouse = { x: 0, y: 0 };
+            }            
 
             // start game
-            state = play;
             gameLoop();
         }
 
         function gameLoop() {
             requestAnimationFrame(gameLoop);
-            state();
-            renderer.render(stage);
-        }
-
-        function play() {
+            
             // update stars
             for(var i=0; i<stars.length; i++) {
                 stars[i].update();
@@ -93,13 +89,9 @@
                 b.zIndex = b.zIndex || 0;
                 return a.zIndex - b.zIndex;
             });
-        }
 
-        function mousemove(ev) {
-            mouse = {
-                x: ev.clientX,
-                y: ev.clientY
-            }
+            // draw
+            renderer.render(stage);
         }
 
         function Ship(x, y) {
