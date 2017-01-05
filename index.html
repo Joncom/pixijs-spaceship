@@ -26,7 +26,7 @@
 <body>
     <script>
         var stage = new PIXI.Container();
-        var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+        var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, { antialias: false });
         document.body.appendChild(renderer.view);
         var sprite, state, left, up, right, down, particles;
 
