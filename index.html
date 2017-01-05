@@ -27,19 +27,11 @@
             .add("meteor.png")
             .load(setup);
 
-        var scale, sprite, state, particles, mouse;
+        var scale, ship, state, particles, mouse;
 
         // setup game
         function setup() {
-            // setup ship sprite
-            sprite = new PIXI.Sprite(PIXI.loader.resources["ship.png"].texture);
-            sprite.anchor.set(0.5, 0.5);
-            sprite.position.set(window.innerWidth/2, window.innerHeight/2);
-            sprite.vx = 0;
-            sprite.vy = 0;
-            sprite.speed = 4;
-            sprite.zIndex = 2;
-            stage.addChild(sprite);
+            ship = new Ship(renderer.view.width/2, renderer.view.height/2);
 
             // capture mouse input
             renderer.view.addEventListener('mousemove', mousemove, false );
@@ -93,19 +85,6 @@
                 }
             }
 
-            // generate particle
-            var size = 16;
-            var particle = new PIXI.Graphics();
-            particle.beginFill(0xCCCCCC);
-            particle.drawRect(0, 0, size, size);
-            particle.endFill();
-            particle.x = sprite.x-2 + Math.random() * 4;
-            particle.y = sprite.y-2 + Math.random() * 4;
-            particle.pivot.set(size/2);
-            particle.zIndex = 0;
-            particles.push(particle);
-            stage.addChild(particle);
-
             // sort draw order by zIndex
             stage.children.sort(function(a,b) {
                 a.zIndex = a.zIndex || 0;
@@ -113,24 +92,8 @@
                 return a.zIndex - b.zIndex;
             });
 
-            // set ship velocity toward mouse
-            var distance = Math.sqrt(Math.pow(mouse.x - sprite.x, 2) + Math.pow(mouse.y - sprite.y, 2));
-            if(distance > 8) {
-                var angle = Math.atan2(mouse.y - sprite.y, mouse.x - sprite.x);
-                sprite.vx = Math.cos(angle) * sprite.speed;
-                sprite.vy = Math.sin(angle) * sprite.speed;
-            } else {
-                sprite.vx = sprite.vy = 0;
-            }
-
-            // rotate ship to face moving direction
-            if(sprite.vx !== 0 || sprite.vy !== 0) {
-                sprite.rotation = Math.atan2(sprite.vy, sprite.vx);
-            }            
-
-            // update sprite position
-            sprite.x += sprite.vx;
-            sprite.y += sprite.vy;
+            // update ship
+            ship.update();
 
             // update meteors
             for(var i=0; i<meteors.length; i++) {
@@ -143,6 +106,52 @@
                 x: ev.clientX,
                 y: ev.clientY
             }
+        }
+
+        function Ship(x, y) {
+            this.speed = 4;
+            this.vx = 0;
+            this.vy = 0;            
+
+            this.sprite = new PIXI.Sprite(PIXI.loader.resources["ship.png"].texture);
+            this.sprite.anchor.set(0.5, 0.5);
+            this.sprite.position.set(x, y);
+            this.sprite.zIndex = 2;
+            stage.addChild(this.sprite);
+        }
+
+        Ship.prototype.update = function() {
+            // set velocity
+            var distance = Math.sqrt(Math.pow(mouse.x - this.sprite.x, 2) + Math.pow(mouse.y - this.sprite.y, 2));
+            if(distance > 8) {
+                var angle = Math.atan2(mouse.y - this.sprite.y, mouse.x - this.sprite.x);
+                this.vx = Math.cos(angle) * this.speed;
+                this.vy = Math.sin(angle) * this.speed;
+            } else {
+                this.vx = this.vy = 0;
+            }   
+            
+            // move
+            this.sprite.x += this.vx;
+            this.sprite.y += this.vy;
+
+            // rotate
+            if(this.vx !== 0 || this.vy !== 0) {
+                this.sprite.rotation = Math.atan2(this.vy, this.vx);
+            }
+
+            // create exhaust particle
+            var size = 16;
+            var particle = new PIXI.Graphics();
+            particle.beginFill(0xCCCCCC);
+            particle.drawRect(0, 0, size, size);
+            particle.endFill();
+            particle.x = this.sprite.x - 2 + Math.random() * 4;
+            particle.y = this.sprite.y - 2 + Math.random() * 4;
+            particle.pivot.set(size/2);
+            particle.zIndex = 0;
+            particles.push(particle);
+            stage.addChild(particle);
         }
 
         function Star(x, y) {
