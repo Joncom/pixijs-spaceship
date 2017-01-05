@@ -21,12 +21,14 @@
             renderer.resize(window.innerWidth, window.innerHeight);
         }
 
-        var sprite, state, particles, scale, mouse;
-
+        // load assets
         PIXI.loader
             .add("ship.png")
             .load(setup);
 
+        var scale, sprite, state, particles, mouse;
+
+        // setup game
         function setup() {
             scale = 2;
 
@@ -50,7 +52,7 @@
 
             particles = [];
 
-            // start the game
+            // start game
             state = play;
             gameLoop();
         }
@@ -109,6 +111,7 @@
                 sprite.rotation = Math.atan2(sprite.vy, sprite.vx);
             }            
 
+            // update sprite position
             sprite.x += sprite.vx;
             sprite.y += sprite.vy;
         }
