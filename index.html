@@ -87,9 +87,14 @@
             });
 
             // set ship velocity toward mouse
-            var angle = Math.atan2(mouse.y - sprite.y, mouse.x - sprite.x);
-            sprite.vx = Math.cos(angle) * sprite.speed;
-            sprite.vy = Math.sin(angle) * sprite.speed;
+            var distance = Math.sqrt(Math.pow(mouse.x - sprite.x, 2) + Math.pow(mouse.y - sprite.y, 2));
+            if(distance > 8) {
+                var angle = Math.atan2(mouse.y - sprite.y, mouse.x - sprite.x);
+                sprite.vx = Math.cos(angle) * sprite.speed;
+                sprite.vy = Math.sin(angle) * sprite.speed;
+            } else {
+                sprite.vx = sprite.vy = 0;
+            }
 
             // rotate ship to face moving direction
             sprite.rotation = Math.atan2(sprite.vy, sprite.vx);
