@@ -28,7 +28,7 @@
         var stage = new PIXI.Container();
         var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.view);
-        var sprite, state, left, up, right, down;
+        var sprite, state, left, up, right, down, particles;
 
         PIXI.loader
             .add("ship.png")
@@ -50,6 +50,8 @@
             right = keyboard(39);
             down = keyboard(40);
 
+            particles = [];
+
             // set game state
             state = play;
             
@@ -64,6 +66,29 @@
         }
 
         function play() {
+            // update particles
+            for(var i=particles.length-1; i>=0; i--) {
+                particles[i].rotation += 0.1;
+                particles[i].scale.x -= 0.01;
+                particles[i].scale.y -= 0.01;
+                if(particles[i].scale.x <= 0 || particles[i].scale.y <= 0) {
+                    stage.removeChild(particles[i]);
+                    particles.splice(i, 1);
+                }
+            }
+
+            // generate particles
+            for( var i=0; i<1; i++) {
+                var particle = new PIXI.Graphics();
+                particle.beginFill(0xCCCCCC);
+                particle.drawRect(0, 0, 8, 8);
+                particle.endFill();
+                particle.x = sprite.x;
+                particle.y = sprite.y;
+                particles.push(particle);
+                stage.addChild(particle);
+            }
+
             // update horizontal velocity
             if(left.isDown && !right.isDown) {
                 sprite.vx = -sprite.speed;
