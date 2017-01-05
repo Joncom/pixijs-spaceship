@@ -51,6 +51,14 @@
             mouse = { x: 0, y: 0 };
 
             particles = [];
+            stars = [];
+
+            // generate stars
+            for(var i=0; i<225; i++) {
+                var x = Math.floor(Math.random() * renderer.view.width);
+                var y = Math.floor(Math.random() * renderer.view.height);
+                stars.push(new Star(x, y));
+            }
 
             // start game
             state = play;
@@ -64,6 +72,11 @@
         }
 
         function play() {
+            // update stars
+            for(var i=0; i<stars.length; i++) {
+                stars[i].updateAlpha();
+            }
+
             // update particles
             for(var i=particles.length-1; i>=0; i--) {
                 particles[i].rotation += 0.1;
@@ -122,6 +135,32 @@
                 y: ev.clientY
             }
         }
+
+        function Star(x, y) {
+            this.timeOffset = Math.random() * 100;
+            this.fadeSpeed = 2.5;
+
+            var z = 0.08 + Math.pow(Math.random(),1.4) * 0.92; // far stars are more likely
+            var size = Math.ceil(Star.MAX_SIZE * z * z);
+
+            this.graphic = new PIXI.Graphics();
+            this.graphic.beginFill(0xFFFFFF);
+            this.graphic.drawRect(0, 0, size, size);
+            this.graphic.endFill();
+            this.graphic.x = x;
+            this.graphic.y = y;
+            this.graphic.scale.set(scale);
+            this.graphic.pivot.set(size/2);
+            this.graphic.zIndex = -1;
+            stage.addChild(this.graphic);
+        }
+
+        Star.prototype.updateAlpha = function() {
+            var time = Date.now() / 1000 + this.timeOffset;
+            this.graphic.alpha = 0.4 + 0.6 * Math.abs(Math.cos(time * this.fadeSpeed));
+        }
+
+        Star.MAX_SIZE = 4;
 
     </script>
 </body>
