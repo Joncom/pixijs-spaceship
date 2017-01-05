@@ -82,6 +82,9 @@
                 sprite.vy = 0;
             }
 
+            // rotate ship to face moving direction
+            sprite.rotation = Math.atan2(sprite.vy, sprite.vx);
+
             sprite.x += sprite.vx;
             sprite.y += sprite.vy;
         }
