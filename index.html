@@ -28,8 +28,7 @@
         var stage = new PIXI.Container();
         var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.view);
-        var sprite;
-        var state = play;
+        var sprite, state;
 
         PIXI.loader
             .add("ship.png")
@@ -42,6 +41,9 @@
             sprite.vx = 0;
             sprite.vy = 0;
             stage.addChild(sprite);
+
+            // set game state
+            state = play;
             
             // start the game
             gameLoop();
