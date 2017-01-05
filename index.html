@@ -37,6 +37,8 @@
         function setup() {
             // setup ship sprite
             sprite = new PIXI.Sprite(PIXI.loader.resources["ship.png"].texture);
+            sprite.scale.set(2);
+            sprite.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
             sprite.anchor.set(0.5, 0.5);
             sprite.position.set(window.innerWidth/2, window.innerHeight/2);
             sprite.vx = 0;
