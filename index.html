@@ -144,7 +144,7 @@
             this.sprite = new PIXI.Sprite(PIXI.loader.resources["ship.png"].texture);
             this.sprite.anchor.set(0.5, 0.5);
             this.sprite.position.set(x, y);
-            this.sprite.zIndex = 2;
+            this.sprite.zIndex = 2000;
             stage.addChild(this.sprite);
         }
 
@@ -238,7 +238,7 @@
             this.sprite = new PIXI.Sprite(PIXI.loader.resources["meteor.png"].texture);
             this.sprite.anchor.set(0.5, 0.5);
             this.sprite.position.set(x, y);
-            this.sprite.zIndex = 1;
+            this.sprite.zIndex = 1000 + meteors.length;
             stage.addChild(this.sprite);
         }
 
@@ -260,6 +260,7 @@
         }
 
         Explosion.prototype.update = function() {
+            // update particles
             for(var i=0; i<this.particles.length; i++) {
                 // fade out particles
                 this.particles[i].alpha -= 0.005;
@@ -283,15 +284,15 @@
                 particle.drawRect(0, 0, size, size);
                 particle.endFill();
                 particle.rotation = Math.random() * Math.PI * 2;
+                particle.pivot.set(size/2);
+                particle.zIndex = 3000;
+                particle.rotateSpeed = Math.random() * 0.04 - 0.02;
 
                 // randomize position
                 var factor = Math.random();
                 particle.x = this.x + Math.cos(particle.rotation) * this.radius * factor;
                 particle.y = this.y + Math.sin(particle.rotation) * this.radius * factor;
 
-                particle.pivot.set(size/2);
-                particle.zIndex = 3;
-                particle.rotateSpeed = Math.random() * 0.04 - 0.02;
                 stage.addChild(particle);
                 this.particles.push(particle);
             }
