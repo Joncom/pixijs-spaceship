@@ -98,7 +98,7 @@
                                                 
                         // replace meteor with smaller meteors
                         var angle = Math.atan2(meteors[i].sprite.y - ship.sprite.y, meteors[i].sprite.x - ship.sprite.x);
-                        for(var j=0; j<3; j++) {
+                        for(var j=0; j<5; j++) {
                             var meteor = new Meteor(meteors[i].sprite.x, meteors[i].sprite.y);
                             meteor.sprite.scale.set(0.5);
                             
