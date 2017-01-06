@@ -262,13 +262,13 @@
         Explosion.prototype.update = function() {
             // update particles
             for(var i=0; i<this.particles.length; i++) {
-                // fade out particles
+                // fade out
                 this.particles[i].alpha -= 0.005;
 
-                // rotate particles
+                // rotate
                 this.particles[i].rotation += this.particles[i].rotateSpeed;
 
-                // scale down particles
+                // scale down
                 this.particles[i].scale.x -= 0.0025;
                 this.particles[i].scale.y -= 0.0025;
             }
