@@ -95,17 +95,27 @@
             if(ship) {
                 for(var i=0; i<meteors.length; i++) {
                     if(hitTestRectangle(ship.sprite, meteors[i].sprite)) {
-                        ship.kill();
-                        ship = null;
-
+                                                
                         // replace meteor with smaller meteors
+                        var angle = Math.atan2(meteors[i].sprite.y - ship.sprite.y, meteors[i].sprite.x - ship.sprite.x);
                         for(var j=0; j<3; j++) {
                             var meteor = new Meteor(meteors[i].sprite.x, meteors[i].sprite.y);
                             meteor.sprite.scale.set(0.5);
+                            
+                            // override velocity to move away from ship
+                            var speed = Math.random() * 4;
+                            var angleRandom = angle + (Math.random() * 2 - 1) * 1;
+                            meteor.vx = Math.cos(angleRandom) * speed;
+                            meteor.vy = Math.sin(angleRandom) * speed;
+                            
                             meteors.push(meteor);
                         }
                         stage.removeChild(meteors[i].sprite);
                         meteors.splice(i, 1);
+
+                        // remove ship
+                        ship.kill();
+                        ship = null;
 
                         break;
                     }
@@ -218,19 +228,19 @@
 
         function Meteor(x, y) {
             this.rotateSpeed = Math.random() * 0.02;
+            this.vx = Math.random() * 2;
+            this.vy = Math.random() * 2;
 
             this.sprite = new PIXI.Sprite(PIXI.loader.resources["meteor.png"].texture);
             this.sprite.anchor.set(0.5, 0.5);
             this.sprite.position.set(x, y);
-            this.sprite.vx = Math.random() * 2;
-            this.sprite.vy = Math.random() * 2;
             this.sprite.zIndex = 1;
             stage.addChild(this.sprite);
         }
 
         Meteor.prototype.update = function() {
-            this.sprite.x += this.sprite.vx;
-            this.sprite.y += this.sprite.vy;
+            this.sprite.x += this.vx;
+            this.sprite.y += this.vy;
             this.sprite.rotation += this.rotateSpeed;            
         }
 
