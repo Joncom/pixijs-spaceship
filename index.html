@@ -251,10 +251,11 @@
             // create particles over time
             var seconds = ( Date.now() - this.createdAt ) / 1000;
             var targetCount = Math.min(this.targetCount, seconds * this.rate);
+            var colors = [0xBBBBBB, 0xCCCCCC, 0xDDDDDD];
             while(this.particles.length < targetCount) {
                 var size = 64;
                 var particle = new PIXI.Graphics();
-                particle.beginFill(0xDDDDDD);
+                particle.beginFill(colors[Math.floor(Math.random() * colors.length)]);
                 particle.drawRect(0, 0, size, size);
                 particle.endFill();
                 particle.x = this.x + (Math.random() - 0.5) * this.radius * 2;
