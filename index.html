@@ -97,6 +97,16 @@
                     if(hitTestRectangle(ship.sprite, meteors[i].sprite)) {
                         ship.kill();
                         ship = null;
+
+                        // replace meteor with smaller meteors
+                        for(var j=0; j<3; j++) {
+                            var meteor = new Meteor(meteors[i].sprite.x, meteors[i].sprite.y);
+                            meteor.sprite.scale.set(0.5);
+                            meteors.push(meteor);
+                        }
+                        stage.removeChild(meteors[i].sprite);
+                        meteors.splice(i, 1);
+
                         break;
                     }
                 }
