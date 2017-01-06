@@ -230,15 +230,15 @@
             this.y = y;
             this.createdAt = Date.now();
             this.particles = [];
-            this.targetCount = 24;
-            this.rate = 24;
+            this.targetCount = 64;
+            this.rate = 512;
             explosions.push(this);
         }
 
         Explosion.prototype.update = function() {
             for(var i=0; i<this.particles.length; i++) {
                 // fade out particles
-                this.particles[i].alpha -= 0.005;
+                this.particles[i].alpha -= 0.0125;
 
                 // rotate particles
                 this.particles[i].rotation += this.particles[i].rotateSpeed;
@@ -251,11 +251,12 @@
                 var particle = new PIXI.Sprite(PIXI.loader.resources["explosion.png"].texture);
                 particle.anchor.set(0.5, 0.5);
                 particle.zIndex = 3;
-                particle.scale.set(0.2);
+                particle.scale.set(0.4);
                 particle.rotateSpeed = Math.random() * 0.01 - (0.005);
 
-                var x = this.x + Math.random() * 64;
-                var y = this.y + Math.random() * 64;
+                var radius = 64;
+                var x = this.x + (Math.random() - 0.5) * radius * 2;
+                var y = this.y + (Math.random() - 0.5) * radius * 2;
                 particle.position.set(x, y);
 
                 this.particles.push(particle);
