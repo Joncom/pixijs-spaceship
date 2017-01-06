@@ -32,15 +32,17 @@
         PIXI.loader
             .add("ship.png")
             .add("meteor.png")
+            .add("explosion.png")
             .load(setup);
 
-        var ship, particles, meteors, stars;
+        var ship, particles, meteors, stars, explosions;
 
         // setup game
         function setup() {
             // create ship
             ship = new Ship(renderer.view.width/2, renderer.view.height/2);
-            particles = [];            
+            particles = [];
+            explosions = [];          
 
             // create stars
             stars = [];
@@ -78,6 +80,11 @@
             // update particles
             for(var i=0; i<particles.length; i++) {
                 particles[i].update();
+            }
+
+            // update explosions
+            for(var i=0; i<explosions.length; i++) {
+                explosions[i].update();
             }
 
             // update ship
@@ -146,7 +153,8 @@
         }
 
         Ship.prototype.kill = function() {
-            stage.removeChild(this.sprite);
+            new Explosion(this.sprite.x, this.sprite.y);
+            stage.removeChild(this.sprite);            
         }
 
         function ExhaustParticle(x, y) {
@@ -215,6 +223,44 @@
             this.sprite.x += this.sprite.vx;
             this.sprite.y += this.sprite.vy;
             this.sprite.rotation += this.rotateSpeed;            
+        }
+
+        function Explosion(x, y) {
+            this.x = x;
+            this.y = y;
+            this.createdAt = Date.now();
+            this.particles = [];
+            this.targetCount = 24;
+            this.rate = 24;
+            explosions.push(this);
+        }
+
+        Explosion.prototype.update = function() {
+            for(var i=0; i<this.particles.length; i++) {
+                // fade out particles
+                this.particles[i].alpha -= 0.005;
+
+                // rotate particles
+                this.particles[i].rotation += this.particles[i].rotateSpeed;
+            }
+
+            // create particles over time
+            var seconds = ( Date.now() - this.createdAt ) / 1000;
+            var targetCount = Math.min(this.targetCount, seconds * this.rate);
+            while(this.particles.length < targetCount) {
+                var particle = new PIXI.Sprite(PIXI.loader.resources["explosion.png"].texture);
+                particle.anchor.set(0.5, 0.5);
+                particle.zIndex = 3;
+                particle.scale.set(0.2);
+                particle.rotateSpeed = Math.random() * 0.01 - (0.005);
+
+                var x = this.x + Math.random() * 64;
+                var y = this.y + Math.random() * 64;
+                particle.position.set(x, y);
+
+                this.particles.push(particle);
+                stage.addChild(particle);
+            }
         }
 
         // https://github.com/kittykatattack/learningPixi#the-hittestrectangle-function
